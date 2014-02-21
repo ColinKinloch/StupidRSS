@@ -1,0 +1,35 @@
+$icon-font-path: "/bower_components/sass-bootstrap/fonts/";
+
+@import 'sass-bootstrap/lib/bootstrap';
+
+$brand-primary: $brand-primary;
+$hr-border: $hr-border;
+
+html, body {
+	height: 100%;
+}
+
+#header {
+	border-bottom: $hr-border solid 1px;
+	.title {
+		color: $brand-primary;
+		display: inline;
+	}
+	.options {
+		@extend .btn-group, .pull-right;
+		a, button {
+			@extend .btn, .btn-default;
+			i {
+				@extend .glyphicon;
+			}
+		}
+	}
+}
+
+.sidebar {
+	@extend .btn-group-vertical/*, .col-md-3*/;
+	height: 100%;
+	a {
+		@extend .btn, .btn-default;
+	}
+}
