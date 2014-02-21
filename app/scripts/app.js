@@ -1,5 +1,7 @@
 'use strict';
 
 angular.module('stupidRssApp', [
-	'ngSanitize'
+	'ngSanitize',
+	'ngAnimate',
+	'mgcrea.ngStrap'
 ]);

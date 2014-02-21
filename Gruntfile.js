@@ -63,7 +63,19 @@ module.exports = function (grunt) {
         port: 9000,
         // Change this to '0.0.0.0' to access the server from outside.
         hostname: 'localhost',
-        livereload: 35729
+        livereload: 35729,
+          middleware: function (connect, options){
+          	return [
+		          function(req, res, next) {
+        				res.setHeader('Access-Control-Allow-Credentials', true);
+		            res.setHeader('Access-Control-Allow-Origin', '*');
+			          res.setHeader('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+			          res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+		            return next();
+		          },
+		          connect.static(require('path').resolve('yeomanConfig.app'))
+          	];
+          }
       },
       livereload: {
         options: {

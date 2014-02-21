@@ -4,7 +4,7 @@
 	</h1>
 	<div class="options">
 		<a><i class="glyphicon-refresh"></i></a>
-		<a><i class="glyphicon-plus"></i></a>
+		<a title="Add feed" data-template="partials/addfeed.html" data-placement="bottom" bs-popover><i class="glyphicon-plus"></i></a>
 		<a><i class="glyphicon-cog"></i></a>
 	</div>
 </header>
@@ -12,11 +12,4 @@
 <div class="sidebar">
 	<a ng-repeat="feed in feeds" ng-href="#{{url}}">{{feed.name}}</a>
 	<a ng-href="{{url}}"><img src="{{img}}"></img>{{name}}</a>
-	<form>
-		<p>New Feed</p>
-		<input ng-model="name">
-		<input ng-model="url">
-		<input ng-model="img">
-		<button ng-click="addFeed(name, url, img)">
-	</form>
 </div>
