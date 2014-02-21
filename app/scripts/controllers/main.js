@@ -2,15 +2,16 @@
 
 function Feed(Url, Name, Img){
 	this.url = Url;
-	if(undefined===Name||undefined===Img)
-	{
-		jQuery.get(this.url, function(data){
-			var rss = $(data);
-			console.log(rss.find("channel.title").text())
-		});
+	var that = this;
+	this.rssCallback = function(data) {
+		var rss = $(data);
+		console.log("this is", that);
+		that.name = rss.find('channel').children('title').text();
+	};
+	if(undefined===Name||undefined===Img) {
+		jQuery.get(this.url, this.rssCallback);
 	}
-	this.name = Name;
-}
+};
 
 angular.module('stupidRssApp')
 	.controller('MainCtrl', function ($scope) {
@@ -20,8 +21,6 @@ angular.module('stupidRssApp')
 			{name:'xkcd', url:'https://xkcd.com/rss.xml'}
 		];
 		$scope.addFeed = function(Url, Name, Img) {
-			var newFeed = new Feed(Url);
-			$scope.feeds.push(newFeed);
-			return 'hi';
+			$scope.feeds.push(new Feed(Url));
 		};
 	});
