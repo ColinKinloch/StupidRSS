@@ -1,10 +1,6 @@
 // Generated on 2014-02-20 using generator-angular 0.7.1
 'use strict';
 
-var mountFolder = function (connect, dir) {
-    return connect.static(require('path').resolve(dir));
-};
-
 // # Globbing
 // for performance reasons we're only matching one level down:
 // 'test/spec/{,*/}*.js'

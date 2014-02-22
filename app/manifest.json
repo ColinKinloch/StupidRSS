@@ -1,0 +1,17 @@
+{
+	"manifest_version": 2,
+	"name": "__MSG_extName__",
+	"version": "0.0.1",
+	
+	"default_locale": "en",
+	"description": "__MSG_extDescription__",
+	"icons": {
+		"16": "images/icon16.png"
+	},
+	"browser_action": {
+		
+	},
+	"permissions": [
+		"*:*/*"
+	]
+}

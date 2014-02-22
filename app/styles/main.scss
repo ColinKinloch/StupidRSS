@@ -9,6 +9,52 @@ html, body {
 	height: 100%;
 }
 
+.glyph-btn {
+	@extend .btn, .btn-default;
+	i {
+		@extend .glyphicon;
+	}
+}
+.feed-btn
+{
+	@extend .glyph-btn;
+	text-align: left;
+	&.center-btn {
+		i, img {
+			
+		}
+		text-align: center;
+	}
+	&:not(.center-btn) {
+		i, img {
+			@extend .pull-left;
+		}
+	}
+	i, img {
+		margin-right: 5px;
+	}
+	img {
+		height: 16px;
+	}
+	&.ng-move, &.ng-leave, &.ng-enter {
+		-webkit-transition: 0.5s linear all;
+		-moz-transition: 0.5s linear all;
+		-o-transition: 0.5s linear all;
+		transition: 0.5s linear all;
+	}
+	&.ng-enter {
+		padding-top: 0;
+		padding-bottom: 0;
+		max-height: 0;
+		overflow: hidden;
+	}
+	&.ng-enter.ng-enter-active {
+		padding-top: 6px;
+		padding-bottom: 6px;
+		max-height: 40px;
+	}
+}
+
 #header {
 	border-bottom: $hr-border solid 1px;
 	.title {
@@ -18,10 +64,7 @@ html, body {
 	.options {
 		@extend .btn-group, .pull-right;
 		a, button {
-			@extend .btn, .btn-default;
-			i {
-				@extend .glyphicon;
-			}
+			@extend .glyph-btn;
 		}
 	}
 }
@@ -30,6 +73,14 @@ html, body {
 	@extend .btn-group-vertical/*, .col-md-3*/;
 	height: 100%;
 	a {
-		@extend .btn, .btn-default;
+		
+		@extend .feed-btn;
 	}
+	div.divider {
+		display: block;
+		padding: 5px;
+	}
+}
+
+#addFeedInputUrl {
 }

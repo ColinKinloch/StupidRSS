@@ -2,6 +2,5 @@
 
 angular.module('stupidRssApp', [
 	'ngSanitize',
-	'ngAnimate',
-	'mgcrea.ngStrap'
+	'ngAnimate'
 ]);

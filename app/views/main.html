@@ -3,13 +3,26 @@
 		StupidRSS
 	</h1>
 	<div class="options">
-		<a><i class="glyphicon-refresh"></i></a>
-		<a title="Add feed" data-template="partials/addfeed.html" data-placement="bottom" bs-popover><i class="glyphicon-plus"></i></a>
+		
 		<a><i class="glyphicon-cog"></i></a>
 	</div>
 </header>
 
 <div class="sidebar">
-	<a ng-repeat="feed in feeds" ng-href="#{{url}}">{{feed.name}}</a>
-	<a ng-href="{{url}}"><img src="{{img}}"></img>{{name}}</a>
+	<a class="center-btn"><i class="glyphicon-refresh"></i>Refresh</a>
+	<div class="divider"></div>
+	<a><i class="glyphicon-tag"></i>Blue</a>
+	<a><i class="glyphicon-tag"></i>Green</a>
+	<a><i class="glyphicon-tag"></i>Yellow</a>
+	<a><i class="glyphicon-tag"></i>Red</a>
+	<div class="divider"></div>
+	<a ng-repeat="feed in feeds" ng-href="#{{feed.url}}"><img ng-src="{{feed.img}}"/>{{feed.name}}</a>
+	<div class="divider"></div>
+	<a class="center-btn" ng-click="showAdd = !showAdd"><i ng-hide="showAdd" class="glyphicon-plus"></i>
+		<span ng-hide="showAdd">Add Feed</span>
+		<form ng-click="$event.stopPropagation()" ng-show="showAdd" ng-submit="addFeed(url); showAdd = true">
+			<label class="sr-only" for="addFeedInputUrl">URL</label>
+			<input id="addFeedInputUrl" class="form-control" placeholder="Feed URL" ng-model="url">
+		</form>
+	</a>
 </div>

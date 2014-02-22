@@ -1,0 +1,10 @@
+{
+	"extName": {
+		"message": "StupidRSS",
+		"description": "Extension Name."
+	},
+	"extDescription": {
+		"message": "It's RSS, dumdum.",
+		"description": "Extension description."
+	}
+}
