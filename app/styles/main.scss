@@ -42,13 +42,13 @@ html, body {
 		-o-transition: 0.5s linear all;
 		transition: 0.5s linear all;
 	}
-	&.ng-enter {
+	&.ng-enter, &.ng-leave.ng-leave-active {
 		padding-top: 0;
 		padding-bottom: 0;
 		max-height: 0;
 		overflow: hidden;
 	}
-	&.ng-enter.ng-enter-active {
+	&.ng-enter.ng-enter-active, &.ng-leave {
 		padding-top: 6px;
 		padding-bottom: 6px;
 		max-height: 40px;

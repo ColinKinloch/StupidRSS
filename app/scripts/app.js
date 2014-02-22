@@ -2,5 +2,6 @@
 
 angular.module('stupidRssApp', [
 	'ngSanitize',
-	'ngAnimate'
+	'ngAnimate',
+	'LocalStorageModule'
 ]);

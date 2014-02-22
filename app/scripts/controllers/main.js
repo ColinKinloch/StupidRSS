@@ -1,6 +1,13 @@
 'use strict';
 /*global $:false */
 
+// Array Remove - By John Resig (MIT Licensed)
+Array.prototype.remove = function(from, to) {
+  var rest = this.slice((to || from) + 1 || this.length);
+  this.length = from < 0 ? this.length + from : from;
+  return this.push.apply(this, rest);
+};
+
 function Feed(Url, Name, Img){
 	this.url = Url;
 	this.name = Name;
@@ -8,26 +15,44 @@ function Feed(Url, Name, Img){
 }
 
 angular.module('stupidRssApp')
-	.controller('MainCtrl', function ($scope, $http) {
-		$scope.feeds = [
-			{name:'HAWPCast.', url:'http://hawpcast.podbean.com/feed'},
-			{name:'xkcd', url:'https://xkcd.com/rss.xml'}
-		];
+	.controller('MainCtrl', function ($scope, $http, localStorageService) {
+		var storedFeeds = localStorageService.get('feeds');
+		console.log(storedFeeds)
+		$scope.feeds = storedFeeds  || [];
+		$scope.$watch(function(){
+			localStorageService.add('feeds', JSON.stringify($scope.feeds));
+		});
+		
 		$scope.showAdd = false;
+		$scope.rmFeed = function(Url) {
+			var uri = URI(Url).normalize();
+			if(uri.protocol()=='')
+				uri.protocol('http');
+			$scope.feeds.forEach(function(feed, i, arr){
+				if(feed.url == uri.href())
+				{
+					console.log("removing:", uri.href())
+					arr.splice(i, 1);
+				}
+			});
+		};
 		$scope.addFeed = function(Url, Name, Img) {
 			var uri = URI(Url).normalize();
 			var exists = false;
 			$scope.feeds.forEach(function(feed){
-				if(feed.url == uri.normalize())
-					{
-						exists = true;
-					}
+				if(feed.url == uri.href())
+				{
+					exists = true;
+				}
 			});
 			if(exists)
+			{
+				console.log('cannot add:', uri.href(), 'entry exists')
 				return;
+			}
 			if(uri.protocol()=='')
 				uri.protocol('http');
-			console.log("adding: ", uri.href())
+			console.log("adding:", uri.href())
 			$http({method: 'GET', url:uri.href()})
 				.success(function(data, status, headers, config){
 					try {
