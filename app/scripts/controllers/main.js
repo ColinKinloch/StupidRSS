@@ -24,23 +24,12 @@ angular.module('stupidRssApp')
 		});
 		
 		$scope.showAdd = false;
-		$scope.rmFeed = function(Url) {
-			var uri = URI(Url).normalize();
-			if(uri.protocol()=='')
-				uri.protocol('http');
-			$scope.feeds.forEach(function(feed, i, arr){
-				if(feed.url == uri.href())
-				{
-					console.log("removing:", uri.href())
-					arr.splice(i, 1);
-				}
-			});
-		};
 		$scope.addFeed = function(Url, Name, Img) {
 			var uri = URI(Url).normalize();
+			console.log('this', uri.filename(), uri.host())
 			var exists = false;
 			$scope.feeds.forEach(function(feed){
-				if(feed.url == uri.href())
+				if(uri.equals(feed.url))
 				{
 					exists = true;
 				}
@@ -52,7 +41,13 @@ angular.module('stupidRssApp')
 			}
 			if(uri.protocol()=='')
 				uri.protocol('http');
-			console.log("adding:", uri.href())
+			if(uri.host()=='')
+			{
+				//TODO do this better
+				uri.host(uri.filename())
+				uri.filename('')
+			}
+			console.log('getting:', uri.href())
 			$http({method: 'GET', url:uri.href()})
 				.success(function(data, status, headers, config){
 					try {
@@ -90,13 +85,15 @@ angular.module('stupidRssApp')
 						var rssUrls = [];
 						xml.find('head').children('link').each(function(i, el){
 							var $el = $(el)
-							console.log(el,$el.attr('type'))
 							if($el.attr('type')?$el.attr('type').match(/.*(rss|atom).*/i):false)
 								rssUrls.push(URI($el.attr('href')));
 						});
 						if(rssUrls[0].host()=='')
 						{
-							rssUrls[0] = URI(uri.href()+rssUrls[0].href()).normalize();
+							console.log('here:');
+							console.log(uri.href(),'+',rssUrls[0].href(),'=',uri.clone().filename(rssUrls[0].href()).href());
+							rssUrls[0] = uri.clone().filename(rssUrls[0].href()).normalize();
+							console.log('yup',rssUrls[0].href())
 						}
 						return $scope.addFeed(rssUrls[0].href(), Name, Img);
 					}
@@ -105,10 +102,36 @@ angular.module('stupidRssApp')
 						console.log('Not RSS nor Atom');
 						return;
 					}
+					$scope.feeds.forEach(function(feed){
+						if(uri.equals(feed.url))
+						{
+							console.log('cannot add', uri.href(), 'last minute feed exists');
+							exists = true;
+						}
+					})
+					if(exists)
+					{
+						return;
+					}
+					console.log('adding:', uri.href());
 					$scope.feeds.push(new Feed(uri.href(), Name, Img));
 				})
 				.error(function(data, status, headers, config){
 					console.log(uri.href()+" ist caput mit status:", status);
 				});
+		};
+		$scope.rmFeed = function(Url) {
+			var uri = URI(Url).normalize();
+			if(uri.protocol()=='')
+				uri.protocol('http');
+			if(uri.host()=='')
+				uri.host(uri.filename().href())
+			$scope.feeds.forEach(function(feed, i, arr){
+				if(feed.url == uri.href())
+				{
+					console.log("removing:", uri.href())
+					arr.splice(i, 1);
+				}
+			});
 		};
 	});
