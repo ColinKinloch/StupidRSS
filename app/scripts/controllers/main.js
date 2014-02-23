@@ -1,34 +1,31 @@
 'use strict';
 /*global $:false */
+/*global URI:false */
 
-// Array Remove - By John Resig (MIT Licensed)
-Array.prototype.remove = function(from, to) {
-  var rest = this.slice((to || from) + 1 || this.length);
-  this.length = from < 0 ? this.length + from : from;
-  return this.push.apply(this, rest);
-};
-
-function Feed(Url, Name, Img){
+function Feed(Url, Name, Img)
+{
 	this.url = Url;
 	this.name = Name;
 	this.img = Img;
 }
 
 angular.module('stupidRssApp')
-	.controller('MainCtrl', function ($scope, $http, localStorageService) {
+	.controller('MainCtrl', function ($scope, $http, localStorageService)
+	{
 		var storedFeeds = localStorageService.get('feeds');
-		console.log(storedFeeds)
 		$scope.feeds = storedFeeds  || [];
-		$scope.$watch(function(){
+		$scope.$watch(function()
+		{
 			localStorageService.add('feeds', JSON.stringify($scope.feeds));
 		});
 		
 		$scope.showAdd = false;
-		$scope.addFeed = function(Url, Name, Img) {
+		$scope.addFeed = function(Url, Name, Img)
+		{
 			var uri = URI(Url).normalize();
-			console.log('this', uri.filename(), uri.host())
 			var exists = false;
-			$scope.feeds.forEach(function(feed){
+			$scope.feeds.forEach(function(feed)
+			{
 				if(uri.equals(feed.url))
 				{
 					exists = true;
@@ -36,28 +33,35 @@ angular.module('stupidRssApp')
 			});
 			if(exists)
 			{
-				console.log('cannot add:', uri.href(), 'entry exists')
+				console.log('cannot add:', uri.href(), 'entry exists');
 				return;
 			}
-			if(uri.protocol()=='')
+			if('' === uri.protocol())
+			{
 				uri.protocol('http');
-			if(uri.host()=='')
+			}
+			if('' === uri.host())
 			{
 				//TODO do this better
-				uri.host(uri.filename())
-				uri.filename('')
+				uri.host(uri.filename());
+				uri.filename('');
 			}
-			console.log('getting:', uri.href())
+			console.log('getting:', uri.href());
 			$http({method: 'GET', url:uri.href()})
-				.success(function(data, status, headers, config){
-					try {
-						var xmlDoc = $.parseXML(data);
+				.success(function(data, status, headers, config)
+				{
+					var xmlDoc;
+					try
+					{
+						xmlDoc = $.parseXML(data);
 					}
-					catch(e) {
-						console.log("URL not XML, searching for html rss/atom link");
+					catch(e)
+					{
+						console.log('URL not XML, searching for html rss/atom link');
 						var rssTags = data.match(/<link.*type=.*(rss|atom).*>/ig);
 						var rssUrls = [];
-						rssTags.forEach(function(tag){
+						rssTags.forEach(function(tag)
+						{
 							rssUrls = rssUrls.concat(tag.match(/href=['"](.*)['"]/i)[1]);
 						});
 						return $scope.addFeed(rssUrls[0]);
@@ -68,10 +72,14 @@ angular.module('stupidRssApp')
 						//TODO Decide which data to favour
 						//TODO Decide which feed to favour
 						console.log('RSS');
-						if(undefined===Name)
+						if(undefined === Name)
+						{
 							Name = xml.find('channel').children('title').text();
-						if(undefined===Img)
+						}
+						if(undefined === Img)
+						{
 							Img = xml.find('channel').children('image').children('url').text();
+						}
 					}
 					else if(xml.children('feed').length?xml.children('feed').attr('xmlns').match(/.*atom.*/i):false)
 					{
@@ -84,16 +92,15 @@ angular.module('stupidRssApp')
 						console.log('Valid XML, HTML');
 						var rssUrls = [];
 						xml.find('head').children('link').each(function(i, el){
-							var $el = $(el)
+							var $el = $(el);
 							if($el.attr('type')?$el.attr('type').match(/.*(rss|atom).*/i):false)
+							{
 								rssUrls.push(URI($el.attr('href')));
+							}
 						});
-						if(rssUrls[0].host()=='')
+						if('' === rssUrls[0].host())
 						{
-							console.log('here:');
-							console.log(uri.href(),'+',rssUrls[0].href(),'=',uri.clone().filename(rssUrls[0].href()).href());
 							rssUrls[0] = uri.clone().filename(rssUrls[0].href()).normalize();
-							console.log('yup',rssUrls[0].href())
 						}
 						return $scope.addFeed(rssUrls[0].href(), Name, Img);
 					}
@@ -108,7 +115,7 @@ angular.module('stupidRssApp')
 							console.log('cannot add', uri.href(), 'last minute feed exists');
 							exists = true;
 						}
-					})
+					});
 					if(exists)
 					{
 						return;
@@ -117,19 +124,25 @@ angular.module('stupidRssApp')
 					$scope.feeds.push(new Feed(uri.href(), Name, Img));
 				})
 				.error(function(data, status, headers, config){
-					console.log(uri.href()+" ist caput mit status:", status);
+					console.log('failed to get', uri.href(), 'with status', status);
 				});
 		};
-		$scope.rmFeed = function(Url) {
+		$scope.rmFeed = function(Url)
+		{
 			var uri = URI(Url).normalize();
-			if(uri.protocol()=='')
+			if('' === uri.protocol())
+			{
 				uri.protocol('http');
-			if(uri.host()=='')
-				uri.host(uri.filename().href())
-			$scope.feeds.forEach(function(feed, i, arr){
-				if(feed.url == uri.href())
+			}
+			if('' === uri.host())
+			{
+				uri.host(uri.filename().href());
+			}
+			$scope.feeds.forEach(function(feed, i, arr)
+			{
+				if(feed.url === uri.href())
 				{
-					console.log("removing:", uri.href())
+					console.log('removing:', uri.href());
 					arr.splice(i, 1);
 				}
 			});
