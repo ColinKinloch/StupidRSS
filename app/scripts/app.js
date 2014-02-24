@@ -3,5 +3,6 @@
 angular.module('stupidRssApp', [
 	'ngSanitize',
 	'ngAnimate',
-	'LocalStorageModule'
+	'LocalStorageModule',
+	'ui.bootstrap'
 ]);

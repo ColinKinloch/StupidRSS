@@ -1,0 +1,11 @@
+@mixin text-stroke($width, $color) {
+	-webkit-text-stroke: $width #{$color};
+	-moz-text-stroke-color: #{$color};
+	-o-text-stroke-color: #{$color};
+	-ms-text-stroke-color: #{$color};
+	text-stroke-color: #{$color};
+	-moz-text-stroke-width: $width;
+	-o-text-stroke-width: $width;
+	-ms-text-stroke-width: $width;
+	text-stroke-width: $width;
+}

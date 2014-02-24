@@ -3,8 +3,24 @@
 		StupidRSS
 	</h1>
 	<div class="options">
-		
-		<a><i class="glyphicon-cog"></i></a>
+		<div class="dropdown">
+			<a class="dropdown-toggle">
+				<i ng-class="view"></i>
+			</a>
+			<div class="dropdown-menu">
+				<a ng-repeat="v in views" ng-click="view = v"><i ng-class="v"></i>{{v}}</a>
+			</div>
+		</div>
+		<div class="dropdown">
+			<a class="dropdown-toggle">
+				<i ng-class="{'read': read, 'unread':!read}"></i>
+			</a>
+			<div class="dropdown-menu">
+				<a ng-click="read = true"><i class="read"></i>Read</a>
+				<a ng-click="read = false"><i class="unread"></i>Unread</a>
+			</div>
+		</div>
+		<a ng-href="options.html"><i class="settings"></i></a>
 	</div>
 </header>
 
@@ -13,11 +29,12 @@
 	<hr ng-show="newContent">
 	<div class="folder">
 		<a class="folder-header" ng-href="#folderUrl"><i ng-click="folderOpen = !folderOpen; $event.stopPropagation(); $event.preventDefault();"><i ng-class="{'glyphicon-chevron-right': !folderOpen, 'glyphicon-chevron-down': folderOpen}"></i><i ng-class="{'glyphicon-folder-open': folderOpen, 'glyphicon-folder-close': !folderOpen}"></i></i>Folder title</a>
+		<a ng-href="#all"><i class="all"></i>All</a>
 		<div class="folder-content" ng-show="folderOpen">
-			<a ng-href="#blue-tag" class="blue"><i class="glyphicon-tag"></i>Blue</a>
-			<a ng-href="#green-tag" class="green"><i class="glyphicon-tag"></i>Green</a>
-			<a ng-href="#yellow-tag" class="yellow"><i class="glyphicon-tag"></i>Yellow</a>
-			<a ng-href="#red-tag" class="red"><i class="glyphicon-tag"></i>Red</a>
+			<a ng-href="#blue-tag" class="blue"><i class="tag"></i>Blue</a>
+			<a ng-href="#green-tag" class="green"><i class="tag"></i>Green</a>
+			<a ng-href="#yellow-tag" class="yellow"><i class="tag"></i>Yellow</a>
+			<a ng-href="#red-tag" class="red"><i class="tag"></i>Red</a>
 		</div>
 	</div>
 	<hr>

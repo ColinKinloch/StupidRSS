@@ -2,9 +2,13 @@
 /*global $:false */
 /*global URI:false */
 
+var fakegoogleChromeRSSID = 'kgoadapppofjjmcfmlhcdooejpikhdgo';
+var googleChromeRSSID = 'nlbjncdgjeocebhnmkbbbdekmmmcbfjd';
+
 function Article(guid)
 {
 	this.guid = guid;
+	this.tag = null;
 }
 
 function Feed(url, name, icon, articles)
@@ -47,6 +51,13 @@ Feed.prototype.getObjects = function()
 {
 	return {url: this.url, name: this.name, img: this.img};
 };
+
+function ddCtl($scope) {
+	$scope.items = [
+		'hey'
+	];
+}
+
 function Folder(name, contents)
 {
 	if('undefined' !== typeof name)
@@ -69,24 +80,30 @@ angular.module('stupidRssApp')
 		var storedFeeds = localStorageService.get('feeds');
 		$scope.folderOpen = true;
 		$scope.newContent = false;
-		$scope.feeds = function(){
+		$scope.feeds = (function(){
 			var feeds = [];
 			if(null !== storedFeeds)
-			storedFeeds.forEach(function(feed){
-				var articles = [];
-				feed.articles.forEach(function(article){
-					articles.push(new Article(article));
+			{
+				storedFeeds.forEach(function(feed){
+					var articles = [];
+					feed.articles.forEach(function(article){
+						articles.push(new Article(article));
+					});
+					feeds.push(new Feed(feed.url, feed.name, feed.icon, articles));
 				});
-				feeds.push(new Feed(feed.url, feed.name, feed.icon, articles));
-			});
+			}
 			return feeds;
-		}();
+		}());
 		$scope.$watch(function()
 		{
 			localStorageService.add('feeds', JSON.stringify($scope.feeds));
 		});
 		
 		$scope.showAdd = false;
+		$scope.read = false;
+		$scope.views = ['list',
+			'grid'];
+		$scope.view = 'list';
 		$scope.addFeed = function(Url, Name, Img)
 		{
 			var uri = URI(Url).normalize();
@@ -105,7 +122,7 @@ angular.module('stupidRssApp')
 				console.log('cannot add:', uri.href(), 'entry exists');
 				return;
 			}
-			if('' === uri.scheme())
+			if('http' !== uri.scheme() || 'https' !== uri.scheme())
 			{
 				uri.scheme('http');
 			}
