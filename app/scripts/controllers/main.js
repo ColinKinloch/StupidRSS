@@ -7,7 +7,7 @@ function Article(guid)
 	this.guid = guid;
 }
 
-function Feed(url, name, icon)
+function Feed(url, name, icon, articles)
 {
 	if('undefined' !== typeof url)
 	{
@@ -19,41 +19,45 @@ function Feed(url, name, icon)
 	}
 	this.name = ('undefined' !== typeof name) ? name : Feed.prototype.name;
 	this.icon = ('undefined' !== typeof icon) ? icon : Feed.prototype.icon;
+	this.articles = ('undefined' !== typeof articles) ? articles : Feed.prototype.articles;
 }
 
 Feed.prototype.url = '';
-Feed.prototype.name = 'New Feed'
+Feed.prototype.name = 'New Feed';
 Feed.prototype.icon = 'images/icon48.png';
+Feed.prototype.articles = [];
 
 Feed.prototype.getXML = function($http)
 {
 	$http({method: 'GET', url: this.url})
-		.success(function{})
+		.success(function(data){
+			
+	});
 	return;
-}
+};
 Feed.prototype.pollName = function()
 {
 	
-}
+};
 Feed.prototype.pollIcon = function()
 {
 	
-}
+};
 Feed.prototype.getObjects = function()
 {
 	return {url: this.url, name: this.name, img: this.img};
-}
-
-function Folder(Name, Contents)
+};
+function Folder(name, contents)
 {
-	if('undefined' !== typeof Name)
+	if('undefined' !== typeof name)
 	{
-		this.name = Name;
+		this.name = ('undefined' !== typeof name) ? name : Folder.prototype.name;
 	}
-	if('undefined' !== typeof Contents)
+	if('undefined' !== typeof contents)
 	{
-		this.contents = Contents;
+		this.contents = ('undefined' !== typeof contents) ? contents : Folder.prototype.contents;
 	}
+	this.open = false;
 }
 
 Folder.prototype.name = 'New Folder';
@@ -65,7 +69,18 @@ angular.module('stupidRssApp')
 		var storedFeeds = localStorageService.get('feeds');
 		$scope.folderOpen = true;
 		$scope.newContent = false;
-		$scope.feeds = storedFeeds  || [];
+		$scope.feeds = function(){
+			var feeds = [];
+			if(null !== storedFeeds)
+			storedFeeds.forEach(function(feed){
+				var articles = [];
+				feed.articles.forEach(function(article){
+					articles.push(new Article(article));
+				});
+				feeds.push(new Feed(feed.url, feed.name, feed.icon, articles));
+			});
+			return feeds;
+		}();
 		$scope.$watch(function()
 		{
 			localStorageService.add('feeds', JSON.stringify($scope.feeds));
@@ -77,7 +92,7 @@ angular.module('stupidRssApp')
 			var uri = URI(Url).normalize();
 			var exists = false;
 			console.log(uri.domain(), 'hey', uri.pathname());
-			console.log(uri.href())
+			console.log(uri.href());
 			$scope.feeds.forEach(function(feed)
 			{
 				if(uri.equals(feed.url))
