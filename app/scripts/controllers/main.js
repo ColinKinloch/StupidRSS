@@ -198,6 +198,7 @@ angular.module('stupidRssApp')
 		};
 		$scope.rmFeed = function(Url)
 		{
+			console.log('attempting to remove:', Url);
 			var uri = URI(Url).normalize();
 			if('' === uri.scheme())
 			{

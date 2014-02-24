@@ -15,10 +15,22 @@ html, body {
 		@extend .glyphicon;
 	}
 }
-.feed-btn
-{
+
+.feed-btn {
 	@extend .glyph-btn;
 	text-align: left;
+	&.blue i {
+			color: blue;
+	}
+	&.green i {
+			color: green;
+	}
+	&.yellow i {
+			color: yellow;
+	}
+	&.red i {
+			color: red;
+	}
 	&.center-btn {
 		i, img {
 			
@@ -27,7 +39,9 @@ html, body {
 	}
 	&:not(.center-btn) {
 		i, img {
-			@extend .pull-left;
+			&:not(.pull-right) {
+				@extend .pull-left;
+			}
 		}
 	}
 	i, img {

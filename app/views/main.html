@@ -14,27 +14,23 @@
 	<div class="folder">
 		<a class="folder-header" ng-href="#folderUrl"><i ng-click="folderOpen = !folderOpen; $event.stopPropagation(); $event.preventDefault();"><i ng-class="{'glyphicon-chevron-right': !folderOpen, 'glyphicon-chevron-down': folderOpen}"></i><i ng-class="{'glyphicon-folder-open': folderOpen, 'glyphicon-folder-close': !folderOpen}"></i></i>Folder title</a>
 		<div class="folder-content" ng-show="folderOpen">
-			<a ng-href="#blue-tag"><i class="glyphicon-tag"></i>Blue</a>
-			<a ng-href="#green-tag"><i class="glyphicon-tag"></i>Green</a>
-			<a ng-href="#yellow-tag"><i class="glyphicon-tag"></i>Yellow</a>
-			<a ng-href="#red-tag"><i class="glyphicon-tag"></i>Red</a>
+			<a ng-href="#blue-tag" class="blue"><i class="glyphicon-tag"></i>Blue</a>
+			<a ng-href="#green-tag" class="green"><i class="glyphicon-tag"></i>Green</a>
+			<a ng-href="#yellow-tag" class="yellow"><i class="glyphicon-tag"></i>Yellow</a>
+			<a ng-href="#red-tag" class="red"><i class="glyphicon-tag"></i>Red</a>
 		</div>
 	</div>
 	<hr>
-	<a ng-repeat="feed in feeds track by feed.url" ng-href="#{{feed.url}}"><img ng-src="{{feed.icon}}"/>{{feed.name}}</a>
+	<a ng-repeat="feed in feeds track by feed.url" ng-href="#{{feed.url}}">
+		<img ng-src="{{feed.icon}}"/>
+		{{feed.name}}
+		<i ng-click="rmFeed(feed.url); $event.stopPropagation();" class="glyphicon-remove pull-right"></i></a>
 	<hr>
 	<a class="center-btn" ng-click="showAdd = !showAdd"><i ng-hide="showAdd" class="glyphicon-plus"></i>
 		<span ng-hide="showAdd">Add Feed</span>
 		<form ng-click="$event.stopPropagation()" ng-show="showAdd" ng-submit="addFeed(url); showAdd = true">
 			<label class="sr-only" for="addFeedInputUrl">URL</label>
 			<input id="addFeedInputUrl" class="form-control" placeholder="Feed URL" ng-model="url">
-		</form>
-	</a>
-	<a class="center-btn" ng-click="showAdd = !showAdd"><i ng-hide="showAdd" class="glyphicon-plus"></i>
-		<span ng-hide="showAdd">Rm Feed</span>
-		<form ng-click="$event.stopPropagation()" ng-show="showAdd" ng-submit="rmFeed(rmurl); showAdd = true">
-			<label class="sr-only" for="addFeedInputUrl">URL</label>
-			<input id="addFeedInputUrl" class="form-control" placeholder="Feed URL" ng-model="rmurl">
 		</form>
 	</a>
 </div>
