@@ -2,17 +2,69 @@
 /*global $:false */
 /*global URI:false */
 
-function Feed(Url, Name, Img)
+function Article(guid)
 {
-	this.url = Url;
-	this.name = Name;
-	this.img = Img;
+	this.guid = guid;
 }
+
+function Feed(url, name, icon)
+{
+	if('undefined' !== typeof url)
+	{
+		this.url = ('undefined' !== typeof url) ? url : Feed.prototype.url;
+	}
+	else
+	{
+		return;
+	}
+	this.name = ('undefined' !== typeof name) ? name : Feed.prototype.name;
+	this.icon = ('undefined' !== typeof icon) ? icon : Feed.prototype.icon;
+}
+
+Feed.prototype.url = '';
+Feed.prototype.name = 'New Feed'
+Feed.prototype.icon = 'images/icon48.png';
+
+Feed.prototype.getXML = function($http)
+{
+	$http({method: 'GET', url: this.url})
+		.success(function{})
+	return;
+}
+Feed.prototype.pollName = function()
+{
+	
+}
+Feed.prototype.pollIcon = function()
+{
+	
+}
+Feed.prototype.getObjects = function()
+{
+	return {url: this.url, name: this.name, img: this.img};
+}
+
+function Folder(Name, Contents)
+{
+	if('undefined' !== typeof Name)
+	{
+		this.name = Name;
+	}
+	if('undefined' !== typeof Contents)
+	{
+		this.contents = Contents;
+	}
+}
+
+Folder.prototype.name = 'New Folder';
+Folder.prototype.contents = [];
 
 angular.module('stupidRssApp')
 	.controller('MainCtrl', function ($scope, $http, localStorageService)
 	{
 		var storedFeeds = localStorageService.get('feeds');
+		$scope.folderOpen = true;
+		$scope.newContent = false;
 		$scope.feeds = storedFeeds  || [];
 		$scope.$watch(function()
 		{
@@ -24,6 +76,8 @@ angular.module('stupidRssApp')
 		{
 			var uri = URI(Url).normalize();
 			var exists = false;
+			console.log(uri.domain(), 'hey', uri.pathname());
+			console.log(uri.href())
 			$scope.feeds.forEach(function(feed)
 			{
 				if(uri.equals(feed.url))
@@ -36,9 +90,9 @@ angular.module('stupidRssApp')
 				console.log('cannot add:', uri.href(), 'entry exists');
 				return;
 			}
-			if('' === uri.protocol())
+			if('' === uri.scheme())
 			{
-				uri.protocol('http');
+				uri.scheme('http');
 			}
 			if('' === uri.host())
 			{
@@ -72,11 +126,11 @@ angular.module('stupidRssApp')
 						//TODO Decide which data to favour
 						//TODO Decide which feed to favour
 						console.log('RSS');
-						if(undefined === Name)
+						if('undefined' === typeof Name)
 						{
 							Name = xml.find('channel').children('title').text();
 						}
-						if(undefined === Img)
+						if('undefined' === typeof Img)
 						{
 							Img = xml.find('channel').children('image').children('url').text();
 						}
@@ -130,13 +184,15 @@ angular.module('stupidRssApp')
 		$scope.rmFeed = function(Url)
 		{
 			var uri = URI(Url).normalize();
-			if('' === uri.protocol())
+			if('' === uri.scheme())
 			{
-				uri.protocol('http');
+				uri.scheme('http');
 			}
 			if('' === uri.host())
 			{
-				uri.host(uri.filename().href());
+				//TODO do this better
+				uri.host(uri.filename());
+				uri.filename('');
 			}
 			$scope.feeds.forEach(function(feed, i, arr)
 			{

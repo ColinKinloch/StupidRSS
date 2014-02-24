@@ -9,15 +9,20 @@
 </header>
 
 <div class="sidebar">
-	<a class="center-btn"><i class="glyphicon-refresh"></i>Refresh</a>
-	<div class="divider"></div>
-	<a><i class="glyphicon-tag"></i>Blue</a>
-	<a><i class="glyphicon-tag"></i>Green</a>
-	<a><i class="glyphicon-tag"></i>Yellow</a>
-	<a><i class="glyphicon-tag"></i>Red</a>
-	<div class="divider"></div>
-	<a ng-repeat="feed in feeds track by feed.url" ng-href="#{{feed.url}}"><img ng-src="{{feed.img}}"/>{{feed.name}}</a>
-	<div class="divider"></div>
+	<a class="center-btn" ng-show="newContent"><i class="glyphicon-refresh"></i>Refresh</a>
+	<hr ng-show="newContent">
+	<div class="folder">
+		<a class="folder-header" ng-href="#folderUrl"><i ng-click="folderOpen = !folderOpen; $event.stopPropagation(); $event.preventDefault();"><i ng-class="{'glyphicon-chevron-right': !folderOpen, 'glyphicon-chevron-down': folderOpen}"></i><i ng-class="{'glyphicon-folder-open': folderOpen, 'glyphicon-folder-close': !folderOpen}"></i></i>Folder title</a>
+		<div class="folder-content" ng-show="folderOpen">
+			<a ng-href="#blue-tag"><i class="glyphicon-tag"></i>Blue</a>
+			<a ng-href="#green-tag"><i class="glyphicon-tag"></i>Green</a>
+			<a ng-href="#yellow-tag"><i class="glyphicon-tag"></i>Yellow</a>
+			<a ng-href="#red-tag"><i class="glyphicon-tag"></i>Red</a>
+		</div>
+	</div>
+	<hr>
+	<a ng-repeat="feed in feeds track by feed.url" ng-href="#{{feed.url}}"><img ng-src="{{feed.icon}}"/>{{feed.name}}</a>
+	<hr>
 	<a class="center-btn" ng-click="showAdd = !showAdd"><i ng-hide="showAdd" class="glyphicon-plus"></i>
 		<span ng-hide="showAdd">Add Feed</span>
 		<form ng-click="$event.stopPropagation()" ng-show="showAdd" ng-submit="addFeed(url); showAdd = true">

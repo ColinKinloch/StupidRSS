@@ -37,10 +37,7 @@ html, body {
 		height: 16px;
 	}
 	&.ng-move, &.ng-leave, &.ng-enter {
-		-webkit-transition: 0.5s linear all;
-		-moz-transition: 0.5s linear all;
-		-o-transition: 0.5s linear all;
-		transition: 0.5s linear all;
+		@include transition(all linear .5s);
 	}
 	&.ng-enter, &.ng-leave.ng-leave-active {
 		padding-top: 0;
@@ -72,13 +69,46 @@ html, body {
 .sidebar {
 	@extend .btn-group-vertical/*, .col-md-3*/;
 	height: 100%;
+	.folder {
+		display: block;
+		@extend .btn-group-vertical;
+		.folder-header {
+			
+		}
+		.folder-content {
+			@extend .btn-group-vertical;
+			display: block;
+			a {
+				border-radius: 0 !important;
+				&:first-child {
+					margin-top: -1px;
+				}
+			}
+			&.ng-show, &.ng-hide {
+				@include transition(all linear .5s);
+			}
+			&.ng-hide-add, &.ng-hide-remove {
+				display:block!important;
+			}
+			&.ng-show-add, &.ng-show-remove {
+				
+			}
+			&.ng-hide {
+				height: 0;
+				overflow: hidden;
+			}
+			&.ng-hide-active {
+				height: auto;
+			}
+		}
+	}
 	a {
-		
+		border-radius: 0 !important;
 		@extend .feed-btn;
 	}
-	div.divider {
+	hr {
 		display: block;
-		padding: 5px;
+		margin: 5px;
 	}
 }
 
