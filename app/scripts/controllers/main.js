@@ -2,101 +2,108 @@
 /*global $:false */
 /*global URI:false */
 
+/*
 var fakegoogleChromeRSSID = 'kgoadapppofjjmcfmlhcdooejpikhdgo';
 var googleChromeRSSID = 'nlbjncdgjeocebhnmkbbbdekmmmcbfjd';
-
-function Article(guid)
-{
-	this.guid = guid;
-	this.tag = null;
-}
-
-function Feed(url, name, icon, articles)
-{
-	if('undefined' !== typeof url)
-	{
-		this.url = ('undefined' !== typeof url) ? url : Feed.prototype.url;
-	}
-	else
-	{
-		return;
-	}
-	this.name = ('undefined' !== typeof name) ? name : Feed.prototype.name;
-	this.icon = ('undefined' !== typeof icon) ? icon : Feed.prototype.icon;
-	this.articles = ('undefined' !== typeof articles) ? articles : Feed.prototype.articles;
-}
-
-Feed.prototype.url = '';
-Feed.prototype.name = 'New Feed';
-Feed.prototype.icon = 'images/icon48.png';
-Feed.prototype.articles = [];
-
-Feed.prototype.getXML = function($http)
-{
-	$http({method: 'GET', url: this.url})
-		.success(function(data){
-			
-	});
-	return;
-};
-Feed.prototype.pollName = function()
-{
-	
-};
-Feed.prototype.pollIcon = function()
-{
-	
-};
-Feed.prototype.getObjects = function()
-{
-	return {url: this.url, name: this.name, img: this.img};
-};
-
-function ddCtl($scope) {
-	$scope.items = [
-		'hey'
-	];
-}
-
-function Folder(name, contents)
-{
-	if('undefined' !== typeof name)
-	{
-		this.name = ('undefined' !== typeof name) ? name : Folder.prototype.name;
-	}
-	if('undefined' !== typeof contents)
-	{
-		this.contents = ('undefined' !== typeof contents) ? contents : Folder.prototype.contents;
-	}
-	this.open = false;
-}
-
-Folder.prototype.name = 'New Folder';
-Folder.prototype.contents = [];
+*/
 
 angular.module('stupidRssApp')
 	.controller('MainCtrl', function ($scope, $http, localStorageService)
 	{
+		
+		function Article(guid)
+		{
+			this.guid = guid;
+			this.tag = null;
+		}
+		
+		function Feed(url, name, icon, articles)
+		{
+			if('undefined' !== typeof url)
+			{
+				this.url = ('undefined' !== typeof url) ? url : Feed.prototype.url;
+			}
+			else
+			{
+				return;
+			}
+			this.name = ('undefined' !== typeof name) ? name : Feed.prototype.name;
+			this.icon = ('undefined' !== typeof icon) ? icon : Feed.prototype.icon;
+			this.articles = ('undefined' !== typeof articles) ? articles : Feed.prototype.articles;
+		}
+		
+		Feed.prototype.url = '';
+		Feed.prototype.name = 'New Feed';
+		Feed.prototype.icon = 'images/icon48.png';
+		Feed.prototype.articles = [];
+		
+		Feed.prototype.updateXML = function()
+		{
+			var xmlDoc;
+			//var that = this;
+			//console.log(that.xml);
+			$http({method: 'GET', url: this.url})
+				.success(function(data){
+					xmlDoc = $.parseXML(data);
+					//TODO Fix stringification
+					//that.xml = xmlDoc;
+				});
+		};
+		Feed.prototype.pollName = function()
+		{
+			
+		};
+		Feed.prototype.pollIcon = function()
+		{
+			
+		};
+		Feed.prototype.toJSON = function()
+		{
+			return JSON.stringify({url: this.url, name: this.name, img: this.img});
+		};
+		
+		function Folder(name, contents)
+		{
+			if('undefined' !== typeof name)
+			{
+				this.name = ('undefined' !== typeof name) ? name : Folder.prototype.name;
+			}
+			if('undefined' !== typeof contents)
+			{
+				this.contents = ('undefined' !== typeof contents) ? contents : Folder.prototype.contents;
+			}
+			this.open = false;
+		}
+		
+		Folder.prototype.name = 'New Folder';
+		Folder.prototype.contents = [];
+		
 		var storedFeeds = localStorageService.get('feeds');
-		$scope.folderOpen = true;
+		$scope.folderOpen = false;
 		$scope.newContent = false;
 		$scope.feeds = (function(){
 			var feeds = [];
 			if(null !== storedFeeds)
 			{
+				console.log(typeof storedFeeds, storedFeeds);
+				
 				storedFeeds.forEach(function(feed){
 					var articles = [];
-					feed.articles.forEach(function(article){
-						articles.push(new Article(article));
-					});
-					feeds.push(new Feed(feed.url, feed.name, feed.icon, articles));
+					var fed = JSON.parse(feed);
+					if('undefined' !== typeof fed.articles)
+					{
+						feed.articles.forEach(function(article){
+							articles.push(new Article(article));
+						});
+					}
+					feeds.push(new Feed(fed.url, fed.name, fed.icon, articles));
 				});
 			}
 			return feeds;
 		}());
-		$scope.$watch(function()
+		$scope.$watchCollection('feeds', function(/*oldFeed, newFeed*/)
 		{
-			localStorageService.add('feeds', JSON.stringify($scope.feeds));
+			localStorageService.set('feeds', $scope.feeds);
 		});
 		
 		$scope.showAdd = false;
@@ -106,10 +113,20 @@ angular.module('stupidRssApp')
 		$scope.view = 'list';
 		$scope.addFeed = function(Url, Name, Img)
 		{
-			var uri = URI(Url).normalize();
+			if('' === Url)
+			{
+				console.log('URL blank');
+				return;
+			}
+			var uri = new URI(Url).normalize();
+			if('' === uri.protocol())
+			{
+				uri = new URI(URI.build({hostname:Url})).normalize();
+			}
 			var exists = false;
-			console.log(uri.domain(), 'hey', uri.pathname());
+			console.log('Domain:', uri.domain(), 'path', uri.pathname());
 			console.log(uri.href());
+			//TODO Move this?
 			$scope.feeds.forEach(function(feed)
 			{
 				if(uri.equals(feed.url))
@@ -122,19 +139,14 @@ angular.module('stupidRssApp')
 				console.log('cannot add:', uri.href(), 'entry exists');
 				return;
 			}
-			if('http' !== uri.scheme() || 'https' !== uri.scheme())
+			//TODO Figure out valid protocols
+			if('' === uri.scheme())
 			{
 				uri.scheme('http');
 			}
-			if('' === uri.host())
-			{
-				//TODO do this better
-				uri.host(uri.filename());
-				uri.filename('');
-			}
 			console.log('getting:', uri.href());
 			$http({method: 'GET', url:uri.href()})
-				.success(function(data, status, headers, config)
+				.success(function(data/*, status, headers, config*/)
 				{
 					var xmlDoc;
 					try
@@ -146,6 +158,7 @@ angular.module('stupidRssApp')
 						console.log('URL not XML, searching for html rss/atom link');
 						var rssTags = data.match(/<link.*type=.*(rss|atom).*>/ig);
 						var rssUrls = [];
+						//TODO Check undefined
 						rssTags.forEach(function(tag)
 						{
 							rssUrls = rssUrls.concat(tag.match(/href=['"](.*)['"]/i)[1]);
@@ -175,7 +188,7 @@ angular.module('stupidRssApp')
 					else if(xml.children('html').length)
 					{
 						//TODO Get the favicon here
-						console.log('Valid XML, HTML');
+						console.log('Valid XHTML');
 						var rssUrls = [];
 						xml.find('head').children('link').each(function(i, el){
 							var $el = $(el);
@@ -209,7 +222,7 @@ angular.module('stupidRssApp')
 					console.log('adding:', uri.href());
 					$scope.feeds.push(new Feed(uri.href(), Name, Img));
 				})
-				.error(function(data, status, headers, config){
+				.error(function(data, status/*, headers, config*/){
 					console.log('failed to get', uri.href(), 'with status', status);
 				});
 		};
