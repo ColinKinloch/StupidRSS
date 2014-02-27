@@ -40,6 +40,16 @@
 		
 		<div class="collapse navbar-collapse" id="navMenu">
 			<ul class="nav navbar-nav navbar-right">
+				
+				
+				<li class="dropdown">
+					<a class="dropdown-toggle glyph" class-toggle="dropdown"><i ng-class="{'read': read, 'unread':!read}"></i><span class="big-hide"> Read</span></a>
+					<ul class="dropdown-menu">
+						<li><a ng-click="read = true" class="glyph"><i class="read"></i> Read</a></li>
+						<li><a ng-click="read = false" class="glyph"><i class="unread"></i> Unread</a></li>
+					</ul>
+				</li>
+				
 				<li class="dropdown">
 					<a class="dropdown-toggle glyph" class-toggle="dropdown"><i ng-class="view"></i><span class="big-hide"> View</span></a>
 					<ul class="dropdown-menu">
@@ -60,25 +70,27 @@
 </nav>
 
 <div class="sidebar">
-	<div class="pusher"></div>
 	<a class="center-btn" ng-show="newContent"><i class="glyphicon-refresh"></i>Refresh</a>
 	<hr ng-show="newContent">
 	<a ng-href="#all"><i class="all"></i>All</a>
 	<div class="folder">
 		<a class="folder-header" ng-href="#folderUrl"><i ng-class="{'folder-open': folderOpen, 'folder-close': !folderOpen}" ng-click="folderOpen = !folderOpen; $event.stopPropagation(); $event.preventDefault();"><i></i><i></i></i>Folder title</a>
 		<div class="folder-content" ng-show="folderOpen">
-			<div class="pusher"></div>
 			<a ng-href="#blue-tag" class="blue"><i class="tag"></i>Blue</a>
 			<a ng-href="#green-tag" class="green"><i class="tag"></i>Green</a>
 			<a ng-href="#yellow-tag" class="yellow"><i class="tag"></i>Yellow</a>
 			<a ng-href="#red-tag" class="red"><i class="tag"></i>Red</a>
 		</div>
+			<a ng-href="#yellow-tag" class="yellow"><i class="tag"></i>Yellow</a>
+			<a ng-href="#red-tag" class="red"><i class="tag"></i>Red</a>
 	</div>
 	<hr>
 	<a ng-repeat="feed in feeds track by feed.url" ng-click="feed.updateXML()" ng-href="#{{feed.url}}">
 		<img ng-src="{{feed.icon}}"/>
 		{{feed.name}}
-		<i ng-click="rmFeed(feed.url); $event.stopPropagation();" class="glyphicon-remove pull-right"></i></a>
+		<i ng-click="rmFeed(feed.url); $event.stopPropagation();" class="glyphicon-remove pull-right"></i>
+		<span ng-show="feed.articles.length" class="badge pull-right">{{feed.articles.length}}</span>
+	</a>
 	<hr>
 	<a class="center-btn" ng-click="showAdd = !showAdd"><i ng-hide="showAdd" class="glyphicon-plus"></i>
 		<span ng-hide="showAdd">Add Feed</span>
