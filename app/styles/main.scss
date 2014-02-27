@@ -164,7 +164,8 @@ html, body {
 			@extend .btn-group-vertical;
 			display: block;
 			a {
-				padding-left: 24px;
+				padding-left: 28px;
+				padding-right: 28px;
 				border-radius: 0 !important;
 				&:first-of-type {
 					margin-top: -1px;
