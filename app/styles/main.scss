@@ -10,28 +10,51 @@ html, body {
 	height: 100%;
 }
 
-.dropdown {
-	margin: 0 -1px;
-	position: relative;
-	float: left;
-	.dropdown-menu {
-		@extend .btn-group-vertical;
-		position: absolute;
+@media (min-width: 768px) {
+	.big-hide {
 		display: none;
 	}
-	&.open {
-		.dropdown-menu {
-			display: block;
-		}
-	}
 }
-.glyph-btn {
-	@extend .btn, .btn-default;
+
+.glyph {
 	i {
 		@extend .glyphicon;
 		&.tag {
 			@extend .glyphicon-bookmark;
 			text-shadow: 0px 1px 1px #999;
+		}
+		&.folder-open {
+			i {
+				&:first-of-type {
+					@extend .glyphicon-chevron-down;
+				}
+				&:last-of-type {
+					@extend .glyphicon-folder-open;
+				}
+			}
+		}
+		&.folder-close {
+			i {
+				&:first-of-type {
+					@extend .glyphicon-chevron-right;
+				}
+				&:last-of-type {
+					@extend .glyphicon-folder-close;
+				}
+			}
+		}
+		&.folder-open, &.folder-close {
+			margin-right: 7px;
+			i {
+				&:first-of-type {
+					line-height: 11pt;
+					font-size: 8px;
+					margin-right: 2px;
+				}
+				&:last-of-type {
+					margin-right: 0;
+				}
+			}
 		}
 		&.all {
 			@extend .glyphicon-home;
@@ -52,6 +75,10 @@ html, body {
 			@extend .glyphicon-th-list;
 		}
 	}
+}
+
+.glyph-btn {
+	@extend .btn, .btn-default, .glyph;
 }
 
 .feed-btn {
@@ -120,11 +147,20 @@ html, body {
 }
 
 .sidebar {
+		.pusher {
+			overflow: hidden;
+			float: left;
+			width: 19px;
+			margin-left: 12px;
+			//margin-bottom: 100%;
+			padding-bottom: 100%;
+		}
 	@extend .btn-group-vertical/*, .col-md-3*/;
 	height: 100%;
 	.folder {
 		display: block;
 		@extend .btn-group-vertical;
+		margin-top: -1px;
 		.folder-header {
 			
 		}
@@ -133,7 +169,7 @@ html, body {
 			display: block;
 			a {
 				border-radius: 0 !important;
-				&:first-child {
+				&:first-of-type {
 					margin-top: -1px;
 				}
 			}

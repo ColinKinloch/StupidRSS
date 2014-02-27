@@ -79,7 +79,7 @@ angular.module('stupidRssApp')
 		Folder.prototype.contents = [];
 		
 		var storedFeeds = localStorageService.get('feeds');
-		$scope.folderOpen = false;
+		$scope.folderOpen = true;
 		$scope.newContent = false;
 		$scope.feeds = (function(){
 			var feeds = [];
