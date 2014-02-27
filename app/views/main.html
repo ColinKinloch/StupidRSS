@@ -1,31 +1,3 @@
-<!--
-<header id="header">
-	<h1 class="title">
-		StupidRSS
-	</h1>
-	<div class="options">
-		<div class="dropdown">
-			<a class="dropdown-toggle">
-				<i ng-class="view"></i>
-			</a>
-			<div class="dropdown-menu">
-				<a ng-repeat="v in views" ng-click="view = v"><i ng-class="v"></i>{{v}}</a>
-			</div>
-		</div>
-		<div class="dropdown">
-			<a class="dropdown-toggle">
-				<i ng-class="{'read': read, 'unread':!read}"></i>
-			</a>
-			<div class="dropdown-menu">
-				<a ng-click="read = true"><i class="read"></i>Read</a>
-				<a ng-click="read = false"><i class="unread"></i>Unread</a>
-			</div>
-		</div>
-		<a ng-href="options.html"><i class="settings"></i></a>
-	</div>
-</header>
--->
-
 <nav class="navbar navbar-default" role="navigation">
 	<div class="container-fluid">
 		<div class="navbar-header">
@@ -40,16 +12,6 @@
 		
 		<div class="collapse navbar-collapse" id="navMenu">
 			<ul class="nav navbar-nav navbar-right">
-				
-				
-				<li class="dropdown">
-					<a class="dropdown-toggle glyph" class-toggle="dropdown"><i ng-class="{'read': read, 'unread':!read}"></i><span class="big-hide"> Read</span></a>
-					<ul class="dropdown-menu">
-						<li><a ng-click="read = true" class="glyph"><i class="read"></i> Read</a></li>
-						<li><a ng-click="read = false" class="glyph"><i class="unread"></i> Unread</a></li>
-					</ul>
-				</li>
-				
 				<li class="dropdown">
 					<a class="dropdown-toggle glyph" class-toggle="dropdown"><i ng-class="view"></i><span class="big-hide"> View</span></a>
 					<ul class="dropdown-menu">
