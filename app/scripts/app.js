@@ -4,5 +4,6 @@ angular.module('stupidRssApp', [
 	'ngSanitize',
 	'ngAnimate',
 	'LocalStorageModule',
-	'ui.bootstrap'
+	'ui.bootstrap',
+	'ui.sortable'
 ]);

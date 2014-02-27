@@ -37,22 +37,22 @@
 	<a ng-href="#all"><i class="all"></i>All</a>
 	<div class="folder">
 		<a class="folder-header" ng-href="#folderUrl"><i ng-class="{'folder-open': folderOpen, 'folder-close': !folderOpen}" ng-click="folderOpen = !folderOpen; $event.stopPropagation(); $event.preventDefault();"><i></i><i></i></i>Folder title</a>
-		<div class="folder-content" ng-show="folderOpen">
+		<div class="folder-content" ng-show="folderOpen" ui-sortable>
 			<a ng-href="#blue-tag" class="blue"><i class="tag"></i>Blue</a>
 			<a ng-href="#green-tag" class="green"><i class="tag"></i>Green</a>
 			<a ng-href="#yellow-tag" class="yellow"><i class="tag"></i>Yellow</a>
 			<a ng-href="#red-tag" class="red"><i class="tag"></i>Red</a>
 		</div>
-			<a ng-href="#yellow-tag" class="yellow"><i class="tag"></i>Yellow</a>
-			<a ng-href="#red-tag" class="red"><i class="tag"></i>Red</a>
 	</div>
 	<hr>
-	<a ng-repeat="feed in feeds track by feed.url" ng-click="feed.updateXML()" ng-href="#{{feed.url}}">
-		<img ng-src="{{feed.icon}}"/>
-		{{feed.name}}
-		<i ng-click="rmFeed(feed.url); $event.stopPropagation();" class="glyphicon-remove pull-right"></i>
-		<span ng-show="feed.articles.length" class="badge pull-right">{{feed.articles.length}}</span>
-	</a>
+	<div class="folder-content" ui-sortable ng-model="feeds">
+		<a ng-repeat="feed in feeds track by feed.url" ng-click="feed.updateXML()" ng-href="#{{feed.url}}">
+			<img ng-src="{{feed.icon}}"/>
+			{{feed.name}}
+			<i ng-click="rmFeed(feed.url); $event.stopPropagation();" class="glyphicon-remove pull-right"></i>
+			<span ng-show="feed.articles.length" class="badge pull-right">{{feed.articles.length}}</span>
+		</a>
+	</div>
 	<hr>
 	<a class="center-btn" ng-click="showAdd = !showAdd"><i ng-hide="showAdd" class="glyphicon-plus"></i>
 		<span ng-hide="showAdd">Add Feed</span>

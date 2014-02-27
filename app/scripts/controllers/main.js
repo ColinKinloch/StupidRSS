@@ -21,7 +21,7 @@ angular.module('stupidRssApp')
 		{
 			if('undefined' !== typeof url)
 			{
-				this.url = ('undefined' !== typeof url) ? url : Feed.prototype.url;
+				this.url = url || Feed.prototype.url;
 			}
 			else
 			{

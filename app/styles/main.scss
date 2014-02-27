@@ -135,24 +135,17 @@ html, body {
 	}
 }
 
-#header {
-	border-bottom: $hr-border solid 1px;
-	.title {
-		color: $brand-primary;
-		display: inline;
-	}
-	.options {
-		@extend .btn-group, .pull-right;
-		a, button {
-			@extend .glyph-btn, .btn-lg;
-			border-radius: 0 !important;
-		}
-	}
-}
-
 .sidebar {
 	@extend .btn-group-vertical/*, .col-md-3*/;
 	height: 100%;
+	.folder-content {
+		@extend .btn-group-vertical;
+		display: block;
+		a {
+			
+		}
+		
+	}
 	.folder {
 		display: block;
 		@extend .btn-group-vertical;
@@ -161,8 +154,6 @@ html, body {
 			padding-left: 4px;
 		}
 		.folder-content {
-			@extend .btn-group-vertical;
-			display: block;
 			a {
 				padding-left: 28px;
 				padding-right: 28px;
