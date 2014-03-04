@@ -74,6 +74,9 @@ html, body {
 		&.list {
 			@extend .glyphicon-th-list;
 		}
+		&.remove {
+			@extend .glyphicon-remove;
+		}
 	}
 }
 
@@ -187,11 +190,32 @@ html, body {
 		padding-left: 12px;
 		margin-right: 36px;
 	}
+	li {
+		display: block;
+		
+	}
 	hr {
 		display: block;
 		margin: 5px;
 	}
 }
 
-#addFeedInputUrl {
+#addFeed {
+	white-space: nowrap;
+	i {
+		margin: 0;
+	}
+	a {
+		margin: 0;
+		margin-left: -1px;
+	}
+	span {
+		display: block;
+		overflow: hidden;
+	}
+	input {
+		margin-left: -1px;
+		border-radius: 0;
+		width: 100%;
+	}
 }
