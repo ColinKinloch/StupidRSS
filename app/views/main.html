@@ -44,12 +44,20 @@
 	</div>
 	<hr>
 	<div class="folder-content" ui-sortable="sortOpts" ng-model="feeds">
-		<a ng-repeat="feed in feeds track by feed.url" ng-click="feed.updateXML()" ng-href="#{{feed.url}}" class="glyph">
-			<img ng-src="{{feed.icon}}"/>
-			{{feed.name}}
-			<i ng-click="rmFeed(feed.url); $event.stopPropagation();" class="remove pull-right"></i>
-			<span ng-show="feed.articles.length" class="badge pull-right">{{feed.articles.length}}</span>
-		</a>
+		<li ng-repeat="feed in feeds track by feed.url" ng-switch on="feed.type">
+			<div class="folder" ng-switch-when="folder">
+				<a class="folder-header" ng-href="#{{feed.url}}"><i ng-class="{'folder-open': settings.folderOpen, 'folder-close': !settings.folderOpen}" ng-click="settings.folderOpen = !settings.folderOpen; $event.stopPropagation(); $event.preventDefault();"><i></i><i></i></i>{{feed.name}}</a>
+				<div class="folder-content" ng-show="feed.open" ui-sortable="sortOpts">
+					<li ng-repeat="f in feed.content">{{f.name}}</li>
+				</div>
+			</div>
+			<a ng-click="feed.updateXML()" ng-href="#{{feed.url}}" class="glyph">
+				<img ng-src="{{feed.icon}}"/>
+				{{feed.name}}
+				<i ng-click="rmFeed(feed.url); $event.stopPropagation();" class="remove pull-right"></i>
+				<span ng-show="feed.articles.length" class="badge pull-right">{{feed.articles.length}}</span>
+			</a>
+		</li>
 	</div>
 	<hr>
 	<li id="addFeed" >
@@ -63,10 +71,10 @@
 			<label class="sr-only" for="addFeedInputUrl">Feed URL</label>
 			<span><input id="addFeedInputUrl" class="form-control" placeholder="Feed URL" ng-model="url"></span>
 		</form>
-		<form ng-show="showAddFolder" ng-click="$event.stopPropagation()" ng-submit="addFeed(url); showAddFolder = true">
+		<form ng-show="showAddFolder" ng-click="$event.stopPropagation()" ng-submit="addFolder(name); showAddFolder = true">
 			<a class="center-btn pull-left" ng-show="showAddFolder" class="glyph" ng-click="toggleAddFolder()"><i class="remove"></i></a>
 			<label class="sr-only" for="addFolderInputUrl">Folder URL</label>
-			<span><input id="addFolderInputUrl" class="form-control" placeholder="Folder URL" ng-model="url"></span>
+			<span><input id="addFolderInputName" class="form-control" placeholder="Folder Name" ng-model="name"></span>
 		</form>
 	</li>
 </div>

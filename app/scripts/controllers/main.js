@@ -36,6 +36,7 @@ angular.module('stupidRssApp')
 		Feed.prototype.name = 'New Feed';
 		Feed.prototype.icon = 'images/icon48.png';
 		Feed.prototype.articles = [];
+		Feed.prototype.type = 'feed';
 		
 		Feed.prototype.updateXML = function()
 		{
@@ -66,17 +67,29 @@ angular.module('stupidRssApp')
 		{
 			if('undefined' !== typeof name)
 			{
-				this.name = ('undefined' !== typeof name) ? name : Folder.prototype.name;
+				this.name = name || Folder.prototype.name;
 			}
 			if('undefined' !== typeof contents)
 			{
-				this.contents = ('undefined' !== typeof contents) ? contents : Folder.prototype.contents;
+				this.contents = contents || Folder.prototype.contents;
 			}
 			this.open = false;
 		}
-		
+		Folder.prototype.url = 'new-folder';
 		Folder.prototype.name = 'New Folder';
 		Folder.prototype.contents = [];
+		Folder.prototype.type = 'folder';
+		Folder.prototype.addContent = function(content)
+		{
+			this.contents.push(content);
+		};
+		Folder.prototype.addContents = function(contents)
+		{
+			var that = this;
+			contents.forEach(function(content){
+				that.addContent(content);
+			});
+		};
 		
 		var storedFeeds = localStorageService.get('feeds');
 		var storedSettings = localStorageService.get('settings');
@@ -104,13 +117,20 @@ angular.module('stupidRssApp')
 				storedFeeds.forEach(function(feed){
 					var articles = [];
 					var fed = JSON.parse(feed);
-					if('undefined' !== typeof fed.articles)
+					if('undefined' !== typeof fed.url)
 					{
-						feed.articles.forEach(function(article){
-							articles.push(new Article(article));
-						});
+						if('undefined' !== typeof fed.articles)
+						{
+							feed.articles.forEach(function(article){
+								articles.push(new Article(article));
+							});
+						}
+						feeds.push(new Feed(fed.url, fed.name, fed.icon, articles));
 					}
-					feeds.push(new Feed(fed.url, fed.name, fed.icon, articles));
+					else
+					{
+						feeds.push(new Folder(fed.name, articles));
+					}
 				});
 			}
 			return feeds;
@@ -224,7 +244,7 @@ angular.module('stupidRssApp')
 							icon = xml.find('channel').children('image').children('url').text();
 						}
 					}
-					else if(xml.children('feed').length?xml.children('feed').attr('xmlns').match(/.*atom.*/i):false)
+					else if(xml.children('feed').length ? xml.children('feed').attr('xmlns').match(/.*atom.*/i) : false)
 					{
 						console.log('Atom');
 						name = xml.find('feed').children('title').text();
@@ -236,7 +256,7 @@ angular.module('stupidRssApp')
 						var rssUrls = [];
 						xml.find('head').children('link').each(function(i, el){
 							var $el = $(el);
-							if($el.attr('type')?$el.attr('type').match(/.*(rss|atom).*/i):false)
+							if($el.attr('type') ? $el.attr('type').match(/.*(rss|atom).*/i) : false)
 							{
 								rssUrls.push(URI($el.attr('href')));
 							}
@@ -249,7 +269,7 @@ angular.module('stupidRssApp')
 					}
 					else
 					{
-						console.log('Not RSS nor Atom');
+						console.log('Not RSS nor Atom nor XHTML');
 						return;
 					}
 					$scope.feeds.forEach(function(feed){
@@ -292,5 +312,27 @@ angular.module('stupidRssApp')
 					arr.splice(i, 1);
 				}
 			});
+		};
+		$scope.addFolder = function(name)
+		{
+			var folder = new Folder(name);
+			var exists = false;
+			$scope.feeds.forEach(function(feed)
+			{
+				if(feed instanceof Folder)
+				{
+					if(feed.name === name)
+					{
+						exists = true;
+					}
+				}
+			});
+			if(exists)
+			{
+				console.log('folder exists');
+				return $scope.addFolder(name+'1');
+			}
+			console.log('adding folder:', folder.name);
+			$scope.feeds.push(folder);
 		};
 	});

@@ -5,6 +5,7 @@ $icon-font-path: "/bower_components/sass-bootstrap/fonts/";
 
 $brand-primary: $brand-primary;
 $hr-border: $hr-border;
+$glyph-shadow: 0px 0px 3px #666;
 
 html, body {
 	height: 100%;
@@ -20,8 +21,8 @@ html, body {
 	i {
 		@extend .glyphicon;
 		&.tag {
-			@extend .glyphicon-bookmark;
-			text-shadow: 0px 1px 1px #999;
+			@extend .glyphicon-tag;
+			text-shadow: $glyph-shadow;
 		}
 		&.folder-open {
 			i {
@@ -121,6 +122,7 @@ html, body {
 	}
 	img {
 		height: 16px;
+		box-shadow: $glyph-shadow;
 	}
 	&.ng-move, &.ng-leave, &.ng-enter {
 		@include transition(all linear .5s);
@@ -188,11 +190,20 @@ html, body {
 		@extend .feed-btn;
 		white-space: nowrap;
 		padding-left: 12px;
+		//TODO Why is this?
 		margin-right: 36px;
+		text-overflow: ellipsis;
 	}
 	li {
 		display: block;
-		
+		margin-top: -1px;
+		a {
+			white-space: nowrap;
+			display: block;
+			margin-right: 0px;
+			//TODO Make this good
+			padding-right: 28px;
+		}
 	}
 	hr {
 		display: block;
@@ -207,7 +218,10 @@ html, body {
 	}
 	a {
 		margin: 0;
-		margin-left: -1px;
+		&:not(:first-child)
+		{
+			margin-left: -1px;
+		}
 	}
 	span {
 		display: block;
